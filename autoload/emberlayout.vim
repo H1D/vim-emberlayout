@@ -5,20 +5,15 @@
 function! s:EmberLoadFiles(files)
   only
   exec 'edit ' . a:files.js
-  vsplit
-  exec 'edit ' . a:files.test
-  wincmd h
+  if get(a:files, 'scss') != '0'
+    vsplit
+    exec 'edit ' . a:files.scss
+    wincmd h
+  endif
   if get(a:files, 'template') != '0'
     split
     exec 'edit ' . a:files.template
     wincmd k
-  endif
-  if get(a:files, 'page') != '0'
-    wincmd l
-    split
-    exec 'edit ' . a:files.page
-    wincmd k
-    wincmd h
   endif
 endfunction
 
@@ -105,8 +100,7 @@ function! s:EmberAutoDetectFiles(file)
   if type == 'components'
     let fileData.template = prefix . 'app/templates/components/' . join(parts, '/') . '.hbs'
     let fileData.js = <SID>EmberCoffeeifyFilename(prefix . 'app/components/' . join(parts, '/') . '.js')
-    let fileData.test = <SID>EmberCoffeeifyFilename(prefix . 'tests/integration/components/' . join(parts, '/') . '-test.js')
-    let fileData.page = <SID>EmberCoffeeifyFilename(prefix . 'tests/pages/components/' . join(parts, '/') . '.js')
+    let fileData.scss = <SID>EmberCoffeeifyFilename(prefix . 'app/styles/components/' . join(parts, '/') . '.scss')
   elseif type == 'controllers'
     let fileData.template = prefix . 'app/templates/' . join(parts, '/') . '.hbs'
     let fileData.js = <SID>EmberCoffeeifyFilename(prefix . 'app/controllers/' . join(parts, '/') . '.js')
